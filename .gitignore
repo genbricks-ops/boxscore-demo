@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+
+# Node
+node_modules/
+frontend/dist/
+
+# Build artifacts
+backend/static/
+*.zip
+*.tar.gz
+
+# IDE
+.vscode/
+.idea/
+
+# Databricks
+.databricks/

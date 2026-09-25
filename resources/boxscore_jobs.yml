@@ -1,0 +1,146 @@
+resources:
+  jobs:
+    boxscore_setup:
+      name: "boxscore-setup"
+      tasks:
+        - task_key: catalog_setup
+          notebook_task:
+            notebook_path: ../notebooks/00_setup/01_catalog_setup.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 1
+
+        - task_key: synthetic_data
+          depends_on:
+            - task_key: catalog_setup
+          notebook_task:
+            notebook_path: ../notebooks/00_setup/02_synthetic_data.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+    boxscore_feature_engineering:
+      name: "boxscore-feature-engineering"
+      tasks:
+        - task_key: demand_features
+          notebook_task:
+            notebook_path: ../notebooks/01_feature_engineering/01_demand_features.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+        - task_key: pricing_features
+          depends_on:
+            - task_key: demand_features
+          notebook_task:
+            notebook_path: ../notebooks/01_feature_engineering/02_pricing_features.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+        - task_key: inventory_features
+          depends_on:
+            - task_key: demand_features
+          notebook_task:
+            notebook_path: ../notebooks/01_feature_engineering/03_inventory_features.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+        - task_key: feature_store
+          depends_on:
+            - task_key: demand_features
+            - task_key: pricing_features
+            - task_key: inventory_features
+          notebook_task:
+            notebook_path: ../notebooks/01_feature_engineering/04_feature_store.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+    boxscore_model_training:
+      name: "boxscore-model-training"
+      tasks:
+        - task_key: demand_forecast
+          notebook_task:
+            notebook_path: ../notebooks/02_models/01_demand_forecast.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+        - task_key: price_sensitivity
+          notebook_task:
+            notebook_path: ../notebooks/02_models/02_price_sensitivity.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+        - task_key: inventory_optimizer
+          notebook_task:
+            notebook_path: ../notebooks/02_models/03_inventory_optimizer.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+        - task_key: revenue_predictor
+          notebook_task:
+            notebook_path: ../notebooks/02_models/04_revenue_predictor.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+        - task_key: anomaly_detector
+          notebook_task:
+            notebook_path: ../notebooks/02_models/05_anomaly_detector.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+        - task_key: recommendation_engine
+          depends_on:
+            - task_key: demand_forecast
+            - task_key: price_sensitivity
+            - task_key: inventory_optimizer
+            - task_key: revenue_predictor
+            - task_key: anomaly_detector
+          notebook_task:
+            notebook_path: ../notebooks/02_models/06_recommendation_engine.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+    boxscore_daily_scoring:
+      name: "boxscore-daily-scoring"
+      schedule:
+        quartz_cron_expression: "0 0 6 * * ?"
+        timezone_id: "America/Los_Angeles"
+      tasks:
+        - task_key: batch_scoring
+          notebook_task:
+            notebook_path: ../notebooks/04_scoring/01_batch_scoring.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 2
+
+        - task_key: monitoring
+          depends_on:
+            - task_key: batch_scoring
+          notebook_task:
+            notebook_path: ../notebooks/05_monitoring/02_model_performance.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 1

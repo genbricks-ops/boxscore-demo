@@ -1,0 +1,20 @@
+bundle:
+  name: boxscore-demo
+
+workspace:
+  host: https://dbc-65b0e455-bd37.cloud.databricks.com
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      root_path: /Workspace/Users/genbricks@genbricks.io/.bundle/${bundle.name}/${bundle.target}
+
+  prod:
+    mode: production
+    workspace:
+      root_path: /Workspace/Users/genbricks@genbricks.io/.bundle/${bundle.name}/${bundle.target}
