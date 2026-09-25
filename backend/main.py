@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 
-from routers import health, data, models, scoring, genie, async_ai
+from routers import health, data, models, scoring, genie, async_ai, champion_challenger
 
 load_dotenv()
 
@@ -35,6 +35,7 @@ app.include_router(models.router)
 app.include_router(scoring.router)
 app.include_router(genie.router)
 app.include_router(async_ai.router)
+app.include_router(champion_challenger.router)
 
 STATIC_DIR = Path(__file__).parent / "static"
 

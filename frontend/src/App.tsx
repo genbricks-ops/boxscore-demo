@@ -7,7 +7,7 @@ import {
 import {
   Menu as MenuIcon, Api as ApiIcon,
   Dashboard as DashboardIcon, TrendingUp, AttachMoney,
-  Inventory2, Hub, MonitorHeart,
+  Inventory2, Hub, MonitorHeart, CompareArrows,
 } from '@mui/icons-material'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AsyncAIProvider } from './contexts/AsyncAIContext'
@@ -19,6 +19,7 @@ import PricingScience from './pages/PricingScience'
 import InventoryOptimizer from './pages/InventoryOptimizer'
 import ModelRegistry from './pages/ModelRegistry'
 import Monitoring from './pages/Monitoring'
+import ChampionChallenger from './pages/ChampionChallenger'
 
 const DRAWER_WIDTH = 240
 const DRAWER_COLLAPSED = 64
@@ -30,6 +31,7 @@ const navItems = [
   { label: 'Inventory', icon: <Inventory2 />, path: '/inventory' },
   { label: 'Model Registry', icon: <Hub />, path: '/models' },
   { label: 'Monitoring', icon: <MonitorHeart />, path: '/monitoring' },
+  { label: 'Champion/Challenger', icon: <CompareArrows />, path: '/champion' },
 ]
 
 export default function App() {
@@ -114,6 +116,7 @@ export default function App() {
             <Route path="/inventory" element={<InventoryOptimizer />} />
             <Route path="/models" element={<ModelRegistry />} />
             <Route path="/monitoring" element={<Monitoring />} />
+            <Route path="/champion" element={<ChampionChallenger />} />
           </Routes>
         </Box>
 
