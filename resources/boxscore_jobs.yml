@@ -121,6 +121,47 @@ resources:
             node_type_id: "i3.xlarge"
             num_workers: 2
 
+    boxscore_validation_serving:
+      name: "boxscore-validation-and-serving"
+      tasks:
+        - task_key: model_validation
+          notebook_task:
+            notebook_path: ../notebooks/03_validation/01_model_validation.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 1
+
+        - task_key: ab_test_framework
+          depends_on:
+            - task_key: model_validation
+          notebook_task:
+            notebook_path: ../notebooks/03_validation/02_ab_test_framework.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 1
+
+        - task_key: serving_endpoints
+          depends_on:
+            - task_key: model_validation
+          notebook_task:
+            notebook_path: ../notebooks/04_scoring/02_serving_endpoints.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 1
+
+        - task_key: data_drift_monitoring
+          depends_on:
+            - task_key: model_validation
+          notebook_task:
+            notebook_path: ../notebooks/05_monitoring/01_data_drift.py
+          new_cluster:
+            spark_version: "15.4.x-ml-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 1
+
     boxscore_daily_scoring:
       name: "boxscore-daily-scoring"
       schedule:

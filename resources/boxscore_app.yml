@@ -1,0 +1,15 @@
+resources:
+  apps:
+    boxscore_app:
+      name: "boxscore-demo"
+      description: "Boxscore — Commercial Decision Platform for Ticket Pricing, Inventory & Demand Forecasting"
+      source_code_path: ../backend
+      config:
+        command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+        env:
+          - name: ENV
+            value: "production"
+          - name: PORT
+            value: "8000"
+          - name: DEBUG
+            value: "False"
